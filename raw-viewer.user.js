@@ -12,6 +12,29 @@
   'use strict';
   console.log('UserScript loaded');
 
+  const handleRawClick = async (event) => {
+    event.stopPropagation();
+
+    const { topicId, postNumber } = event.currentTarget.dataset;
+    const rawUrl = `https://discuss.codecademy.com/raw/${topicId}/${postNumber}`;
+    console.log('Clicked', topicId, postNumber);
+
+    let text;
+    try {
+      const response = await fetch(rawUrl);
+      if (response.ok) {
+        text = await response.text();
+      } else {
+        text = `Unable to load.\n\nGo to:\n${rawUrl}`;
+      }
+    } catch (error) {
+      text = `Network error encountered.\n\nGo to:\n${rawUrl}`;
+    }
+
+    console.log(text);
+
+  };
+
   const createRawButton = (topicId, postNumber) => {
     const rawButton = document.createElement('button');
     rawButton.setAttribute('data-topic-id', topicId);
@@ -30,10 +53,11 @@
     //const shareButton = node.querySelector('nav > div > button.widget-button.btn-flat.share.no-text.btn-icon');
     const shareButton = node.querySelector('button.share');
     const postNumber = shareButton && shareButton.getAttribute('data-post-number');
-    console.log(topicId, postNumber);
+    //console.log(topicId, postNumber);
     if (!topicId || !shareButton || !postNumber) return;
 
     const rawButton = createRawButton(topicId, postNumber);
+    rawButton.addEventListener('click', handleRawClick);
 
     //shareButton.parentNode.insertBefore(rawButton, shareButton.nextSibling);
     shareButton.after(rawButton);
@@ -53,7 +77,7 @@
         } else if (node && node.querySelectorAll) {
           node.querySelectorAll('article').forEach(node => processPost(node));
         } else {
-          console.log(node);
+          //console.log(node);
           //console.log(mutation);
         }
       }
