@@ -21,12 +21,13 @@
     };
     const div = document.createElement('div');
     div.setAttribute('id', 'raw-view');
-    div.setAttribute('class', 'visible ember-view');
+    div.setAttribute('class', 'ember-view');
     for (const style in styles) {
       div.style[style] = styles[style];
     }
 
     div.innerHTML = `<textarea id="raw-text" spellcheck="false" style="width: 100%; height: 100%;" class="d-editor-input ember-text-area ember-view"></textarea>`;
+    div.querySelector('#raw-text').onclick = (event) => event.stopPropagation();
     return div;
   };
 
@@ -41,6 +42,8 @@
     rawView.style.top = `${top}px`;
     rawView.style.width = `${width}px`;
     rawView.style.height = `${height}px`;
+    rawView.style.display = 'block';
+    document.body.addEventListener('click', () => rawView.style.display = 'none', { once: true });
   };
 
   const handleRawClick = async (event) => {
