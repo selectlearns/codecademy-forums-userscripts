@@ -12,7 +12,7 @@
   'use strict';
   console.log('UserScript loaded');
 
-  const createRawView = () => {
+  const insertRawView = () => {
     const styles = {
       position: 'absolute',
       zIndex: 300,
@@ -28,15 +28,12 @@
 
     div.innerHTML = `<textarea id="raw-text" spellcheck="false" style="width: 100%; height: 100%;" class="d-editor-input ember-text-area ember-view"></textarea>`;
     div.querySelector('#raw-text').onclick = (event) => event.stopPropagation();
+    document.getElementById('share-link').after(div);
     return div;
   };
 
   const showRawView = (text, left, top, width, height) => {
-    let rawView = document.getElementById('raw-view')
-    if (!rawView) {
-      rawView = createRawView();
-      document.getElementById('share-link').after(rawView);
-    }
+    const rawView = document.getElementById('raw-view') || insertRawView();
     rawView.querySelector('#raw-text').value = text;
     rawView.style.left = `${left}px`;
     rawView.style.top = `${top}px`;
