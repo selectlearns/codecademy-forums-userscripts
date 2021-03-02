@@ -108,16 +108,8 @@
     for (const mutation of mutations) {
       //console.log(mutation);
       for (const node of mutation.addedNodes) {
-        if (node.nodeName === '#text') continue;
-
-        if (node && node.classList && node.classList.contains('topic-post')) {
-          //const post = node.querySelector('article');
-          processPost(node.querySelector('article'));
-        } else if (node && node.querySelectorAll) {
+        if (node.querySelectorAll) {
           node.querySelectorAll('article').forEach(node => processPost(node));
-        } else {
-          //console.log(node);
-          //console.log(mutation);
         }
       }
     }
