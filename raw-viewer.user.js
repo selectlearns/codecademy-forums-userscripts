@@ -12,10 +12,43 @@
   'use strict';
   console.log('UserScript loaded');
 
+  const createRawView = () => {
+    const styles = {
+      position: 'absolute',
+      zIndex: 300,
+      boxShadow: '0 4px 14px rgb(0 0 0 / 15%)',
+      backgroundColor: 'var(--secondary)'
+    };
+    const div = document.createElement('div');
+    div.setAttribute('id', 'raw-view');
+    div.setAttribute('class', 'visible ember-view');
+    for (const style in styles) {
+      div.style[style] = styles[style];
+    }
+
+    div.innerHTML = `<textarea id="raw-text" spellcheck="false" style="width: 100%; height: 100%;" class="d-editor-input ember-text-area ember-view"></textarea>`;
+    return div;
+  };
+
+  const showRawView = (text, left, top, width, height) => {
+    let rawView = document.getElementById('raw-view')
+    if (!rawView) {
+      rawView = createRawView();
+      document.getElementById('share-link').after(rawView);
+    }
+    rawView.querySelector('#raw-text').value = text;
+    rawView.style.left = `${left}px`;
+    rawView.style.top = `${top}px`;
+    rawView.style.width = `${width}px`;
+    rawView.style.height = `${height}px`;
+  };
+
   const handleRawClick = async (event) => {
     event.stopPropagation();
 
     const { topicId, postNumber } = event.currentTarget.dataset;
+    const post = event.currentTarget.closest('div.contents').querySelector('div.cooked');
+    console.log(post);
     const rawUrl = `https://discuss.codecademy.com/raw/${topicId}/${postNumber}`;
     console.log('Clicked', topicId, postNumber);
 
@@ -32,6 +65,9 @@
     }
 
     console.log(text);
+    const pos = post.getBoundingClientRect();
+    console.log(pos);
+    showRawView(text, pos.left + window.scrollX, pos.top + window.scrollY, post.clientWidth, post.clientHeight);
 
   };
 
