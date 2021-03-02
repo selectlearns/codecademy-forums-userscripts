@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unformatted Forum Post Viewer (Codecademy Discourse)
 // @namespace    https://github.com/selectlearns
-// @version      0.1
+// @version      1.0
 // @description  Adds a button to see the unformatted (raw) post
 // @author       selectlearns (SelectAll in forums)
 // @match        https://discuss.codecademy.com/*
